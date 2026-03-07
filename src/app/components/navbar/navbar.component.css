@@ -1,0 +1,65 @@
+/* Navbar */
+nav {
+  height: 4rem;
+}
+
+.nav-logo-icon {
+  transition: transform 0.2s ease;
+}
+
+.nav-logo:hover .nav-logo-icon {
+  transform: scale(1.1);
+}
+
+.nav-link {
+  transition: color 0.15s ease, background-color 0.15s ease;
+  border-radius: 0.5rem;
+  font-size: 0.875rem;
+  font-weight: 500;
+}
+
+.nav-link:hover {
+  color: hsl(var(--foreground));
+  background-color: hsl(var(--accent));
+}
+
+.nav-link.active {
+  color: hsl(var(--primary));
+  background-color: hsl(var(--primary) / 0.1);
+}
+
+.theme-toggle {
+  transition: background-color 0.15s ease, transform 0.2s ease;
+}
+
+.theme-toggle:hover {
+  background-color: hsl(var(--accent));
+  transform: rotate(15deg);
+}
+
+.user-dropdown {
+  animation: dropdownIn 0.15s ease;
+  transform-origin: top right;
+}
+
+@keyframes dropdownIn {
+  from { opacity: 0; transform: scale(0.95) translateY(-8px); }
+  to { opacity: 1; transform: scale(1) translateY(0); }
+}
+
+.mobile-menu {
+  animation: slideDown 0.2s ease;
+}
+
+@keyframes slideDown {
+  from { opacity: 0; transform: translateY(-8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.chevron {
+  transition: transform 0.2s ease;
+}
+
+.chevron.open {
+  transform: rotate(180deg);
+}

@@ -1,0 +1,202 @@
+
+    <div class="relative overflow-hidden">
+      <!-- Hero Section -->
+      <section class="relative min-h-[90vh] flex items-center justify-center">
+        <canvas #particleCanvas class="absolute inset-0 pointer-events-none" style="opacity:0.6"></canvas>
+
+        <!-- Gradient Orbs -->
+        <div class="absolute top-1/4 left-1/4 w-96 h-96 bg-primary/20 rounded-full blur-3xl animate-pulse"></div>
+        <div class="absolute bottom-1/4 right-1/4 w-96 h-96 bg-primary/10 rounded-full blur-3xl animate-pulse" style="animation-delay:1s"></div>
+
+        <div class="container mx-auto px-4 relative z-10">
+          <div class="max-w-4xl mx-auto text-center">
+            <!-- Badge -->
+            <div class="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary/10 border border-primary/20 mb-8 animate-fade-in">
+              <svg class="w-4 h-4 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 3l14 9-14 9V3z"/>
+              </svg>
+              <span class="text-sm font-medium text-primary">Powered by OWASP ASVS Standards</span>
+            </div>
+
+            <!-- Title -->
+            <h1 class="text-5xl md:text-7xl font-bold mb-6 leading-tight animate-fade-in">
+              Secure Your Code with
+              <span class="bg-gradient-to-r from-primary via-primary/80 to-primary/60 bg-clip-text text-transparent"> AI-Powered</span>
+              Analysis
+            </h1>
+
+            <!-- Description -->
+            <p class="text-xl text-muted-foreground mb-10 max-w-2xl mx-auto animate-fade-in">
+              Scan GitHub repositories, detect vulnerabilities, and get AI-generated remediation suggestions.
+              Map findings to OWASP ASVS requirements for comprehensive security compliance.
+            </p>
+
+            <!-- CTA -->
+            <div class="flex flex-col sm:flex-row gap-4 justify-center animate-fade-in">
+              <a routerLink="/scanner">
+                <button class="flex items-center gap-2 px-8 py-4 text-lg rounded-full bg-primary text-primary-foreground hover:bg-primary/90 transition-all group font-medium">
+                  <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/>
+                  </svg>
+                  Start Free Scan
+                  <svg class="w-5 h-5 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6"/>
+                  </svg>
+                </button>
+              </a>
+              <a routerLink="/checklist">
+                <button class="flex items-center gap-2 px-8 py-4 text-lg rounded-full border border-border hover:bg-accent transition-all font-medium">
+                  <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+                  </svg>
+                  Explore ASVS
+                </button>
+              </a>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Stats Section -->
+      <section class="py-20 border-y border-border/40 bg-accent/30">
+        <div class="container mx-auto px-4">
+          <div class="grid grid-cols-2 md:grid-cols-4 gap-8">
+            @for (stat of stats; track stat.label) {
+              <div class="text-center animate-fade-in">
+                <div class="text-4xl md:text-5xl font-bold bg-gradient-to-r from-primary to-primary/60 bg-clip-text text-transparent mb-2">
+                  {{ stat.value }}{{ stat.suffix }}
+                </div>
+                <div class="text-muted-foreground text-sm">{{ stat.label }}</div>
+              </div>
+            }
+          </div>
+        </div>
+      </section>
+
+      <!-- Features Section -->
+      <section class="py-24">
+        <div class="container mx-auto px-4">
+          <div class="text-center mb-16">
+            <h2 class="text-3xl md:text-4xl font-bold mb-4">Everything You Need for Security</h2>
+            <p class="text-muted-foreground text-lg max-w-2xl mx-auto">
+              Comprehensive security scanning and analysis tools powered by OWASP ASVS standards
+            </p>
+          </div>
+
+          <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
+            @for (feature of features; track feature.title) {
+              <div class="relative p-6 rounded-2xl bg-card border border-border/50 overflow-hidden group hover:-translate-y-1 hover:scale-105 transition-all duration-300">
+                <div class="absolute top-0 right-0 w-32 h-32 opacity-10 group-hover:opacity-20 transition-opacity rounded-full blur-3xl" [class]="feature.color"></div>
+                <div class="w-12 h-12 rounded-xl flex items-center justify-center mb-4" [class]="feature.color">
+                  <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" [attr.d]="feature.icon"/>
+                  </svg>
+                </div>
+                <h3 class="text-lg font-semibold mb-2">{{ feature.title }}</h3>
+                <p class="text-muted-foreground text-sm">{{ feature.description }}</p>
+              </div>
+            }
+          </div>
+
+          <div class="grid md:grid-cols-2 gap-6 max-w-3xl mx-auto">
+            @for (feature of additionalFeatures; track feature.title) {
+              <div class="relative p-6 rounded-2xl bg-card border border-border/50 overflow-hidden group hover:-translate-y-1 hover:scale-105 transition-all duration-300">
+                <div class="w-12 h-12 rounded-xl flex items-center justify-center mb-4" [class]="feature.color">
+                  <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" [attr.d]="feature.icon"/>
+                  </svg>
+                </div>
+                <h3 class="text-lg font-semibold mb-2">{{ feature.title }}</h3>
+                <p class="text-muted-foreground text-sm">{{ feature.description }}</p>
+              </div>
+            }
+          </div>
+        </div>
+      </section>
+
+      <!-- GitHub Integration Section -->
+      <section class="py-24 bg-accent/30">
+        <div class="container mx-auto px-4">
+          <div class="grid lg:grid-cols-2 gap-12 items-center">
+            <div>
+              <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-primary/10 text-primary text-sm font-medium mb-4">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 00-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0020 4.77 5.07 5.07 0 0019.91 1S18.73.65 16 2.48a13.38 13.38 0 00-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 005 4.77a5.44 5.44 0 00-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 009 18.13V22"/>
+                </svg>
+                GitHub Integration
+              </div>
+              <h2 class="text-3xl md:text-4xl font-bold mb-4">Scan Any Repository in Seconds</h2>
+              <p class="text-muted-foreground text-lg mb-6">
+                Simply paste your GitHub repository URL and our scanner will analyze your code for security vulnerabilities, outdated dependencies, and configuration issues.
+              </p>
+              <ul class="space-y-3">
+                @for (item of githubFeatures; track item) {
+                  <li class="flex items-center gap-3">
+                    <svg class="w-5 h-5 text-primary flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                    </svg>
+                    <span>{{ item }}</span>
+                  </li>
+                }
+              </ul>
+              <a routerLink="/scanner" class="inline-block mt-8">
+                <button class="flex items-center gap-2 px-6 py-3 rounded-full bg-primary text-primary-foreground hover:bg-primary/90 transition-all group font-medium">
+                  Try It Now
+                  <svg class="w-4 h-4 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6"/>
+                  </svg>
+                </button>
+              </a>
+            </div>
+
+            <!-- Mock Report Card -->
+            <div class="relative rounded-2xl bg-card border border-border/50 p-6 shadow-2xl">
+              <div class="flex items-center gap-2 mb-4 pb-4 border-b border-border/50">
+                <div class="w-3 h-3 rounded-full bg-red-500"></div>
+                <div class="w-3 h-3 rounded-full bg-yellow-500"></div>
+                <div class="w-3 h-3 rounded-full bg-green-500"></div>
+                <span class="ml-4 text-sm text-muted-foreground">Security Report</span>
+              </div>
+              <div class="space-y-3">
+                @for (item of mockReport; track item.label) {
+                  <div class="flex items-center justify-between p-3 rounded-lg bg-accent/50">
+                    <div class="flex items-center gap-3">
+                      <div class="w-2 h-2 rounded-full" [class]="item.dot"></div>
+                      <span class="text-sm">{{ item.label }}</span>
+                    </div>
+                    <span class="text-xs px-2 py-1 rounded-full text-white" [class]="item.badge">{{ item.severity }}</span>
+                  </div>
+                }
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- CTA Section -->
+      <section class="py-24">
+        <div class="container mx-auto px-4">
+          <div class="relative rounded-3xl bg-gradient-to-br from-primary/20 via-primary/10 to-background border border-primary/20 p-12 md:p-16 text-center overflow-hidden">
+            <div class="absolute top-0 left-1/2 -translate-x-1/2 w-96 h-96 bg-primary/20 rounded-full blur-3xl"></div>
+            <div class="relative z-10">
+              <h2 class="text-3xl md:text-5xl font-bold mb-4">Ready to Secure Your Code?</h2>
+              <p class="text-muted-foreground text-lg mb-8 max-w-xl mx-auto">Start scanning your repositories for free. No credit card required.</p>
+              <div class="flex flex-col sm:flex-row gap-4 justify-center">
+                <a routerLink="/scanner">
+                  <button class="flex items-center gap-2 px-8 py-4 rounded-full bg-primary text-primary-foreground hover:bg-primary/90 transition-all font-medium">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/>
+                    </svg>
+                    Start Free Scan
+                  </button>
+                </a>
+                <a routerLink="/login">
+                  <button class="px-8 py-4 rounded-full border border-border hover:bg-accent transition-all font-medium">Create Account</button>
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+    </div>
+  

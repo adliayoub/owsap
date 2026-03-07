@@ -1,0 +1,201 @@
+
+    <div class="min-h-[calc(100vh-4rem)] py-8 px-4">
+      <div class="container mx-auto max-w-6xl">
+        <div class="mb-8 animate-fade-in">
+          <h1 class="text-3xl font-bold mb-2">OWASP ASVS Checklist</h1>
+          <p class="text-muted-foreground">Track your application's compliance with OWASP ASVS requirements</p>
+        </div>
+
+        <!-- Progress Card -->
+        <div class="mb-6 p-6 rounded-xl bg-card border border-border/50">
+          <div class="flex items-center justify-between mb-4">
+            <div>
+              <h3 class="font-semibold">Overall Progress</h3>
+              <p class="text-sm text-muted-foreground">{{ filteredRequirements().length }} requirements</p>
+            </div>
+            <span class="text-2xl font-bold">{{ progress().percentage }}%</span>
+          </div>
+          <div class="w-full bg-accent rounded-full h-2 mb-4">
+            <div class="bg-primary h-2 rounded-full transition-all duration-500" [style.width.%]="progress().percentage"></div>
+          </div>
+          <div class="flex gap-6 text-sm flex-wrap">
+            <div class="flex items-center gap-2">
+              <svg class="w-4 h-4 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+              </svg>
+              <span>{{ progress().completed }} Completed</span>
+            </div>
+            <div class="flex items-center gap-2">
+              <svg class="w-4 h-4 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
+              </svg>
+              <span>{{ progress().inProgress }} In Progress</span>
+            </div>
+            <div class="flex items-center gap-2">
+              <svg class="w-4 h-4 text-muted-foreground" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <circle cx="12" cy="12" r="10" stroke-width="2"/>
+              </svg>
+              <span>{{ progress().notStarted }} Not Started</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Filters -->
+        <div class="flex flex-col md:flex-row gap-4 mb-6">
+          <div class="flex-1 relative">
+            <svg class="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
+            </svg>
+            <input type="text" placeholder="Search requirements..."
+                   [ngModel]="searchQuery()" (ngModelChange)="searchQuery.set($event)"
+                   class="w-full pl-10 pr-4 py-3 bg-background border border-input rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-ring"/>
+          </div>
+          <select [ngModel]="selectedArea()" (ngModelChange)="onAreaChange($event)"
+                  class="px-4 py-3 bg-background border border-input rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-ring w-full md:w-52">
+            <option value="all">All Areas</option>
+            @for (area of areas(); track area) {
+              <option [value]="area">{{ area }}</option>
+            }
+          </select>
+          <select [ngModel]="selectedLevel()" (ngModelChange)="selectedLevel.set($event)"
+                  class="px-4 py-3 bg-background border border-input rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-ring w-full md:w-36">
+            <option value="all">All Levels</option>
+            <option value="1">Level 1</option>
+            <option value="2">Level 2</option>
+            <option value="3">Level 3</option>
+          </select>
+          <div class="flex gap-2">
+            <button (click)="exportData('json')" class="px-4 py-3 rounded-xl border border-border hover:bg-accent transition-colors text-sm flex items-center gap-2">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/>
+              </svg>
+              JSON
+            </button>
+            <button (click)="exportData('csv')" class="px-4 py-3 rounded-xl border border-border hover:bg-accent transition-colors text-sm flex items-center gap-2">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/>
+              </svg>
+              CSV
+            </button>
+          </div>
+        </div>
+
+        <!-- Requirements List -->
+        <div class="space-y-3">
+          @for (req of paginatedRequirements(); track req['#']) {
+            <div class="p-4 rounded-xl bg-card border border-border/50 hover:border-primary/30 transition-colors">
+              <div class="flex items-start gap-4">
+                <input type="checkbox"
+                       [checked]="statuses()[req['#']]?.status === 'Completed'"
+                       (change)="updateStatus(req['#'], getCheckboxValue($event) ? 'Completed' : 'Not Started')"
+                       class="mt-1 w-4 h-4 rounded accent-primary cursor-pointer"/>
+                <div class="flex-1 min-w-0">
+                  <div class="flex flex-wrap items-center gap-2 mb-2">
+                    <span class="font-mono text-sm text-muted-foreground">{{ req['#'] }}</span>
+                    @if (req.Area) {
+                      <span class="text-xs px-2 py-0.5 rounded-full bg-secondary text-secondary-foreground">{{ req.Area }}</span>
+                    }
+                    <span class="text-xs px-2 py-0.5 rounded-full border border-border">Level {{ req['ASVS Level'] }}</span>
+                    @if (req.CWE) {
+                      <span class="text-xs px-2 py-0.5 rounded-full border border-border">CWE-{{ req.CWE }}</span>
+                    }
+                    <select [ngModel]="statuses()[req['#']]?.status || 'Not Started'"
+                            (ngModelChange)="updateStatus(req['#'], $event)"
+                            class="text-xs px-2 py-1 rounded-lg bg-background border border-input focus:outline-none focus:ring-1 focus:ring-ring">
+                      <option>Not Started</option>
+                      <option>In Progress</option>
+                      <option>Completed</option>
+                      <option>Not Applicable</option>
+                    </select>
+                  </div>
+                  <p class="text-sm">{{ req['Verification Requirement'] }}</p>
+                </div>
+                <button (click)="openAIExplain(req)" class="flex-shrink-0 flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-accent transition-colors text-sm whitespace-nowrap">
+                  <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"/>
+                  </svg>
+                  AI Explain
+                </button>
+              </div>
+            </div>
+          }
+        </div>
+
+        <!-- Pagination -->
+        @if (totalPages() > 1) {
+          <div class="flex items-center justify-center gap-4 mt-8">
+            <button (click)="prevPage()" [disabled]="currentPage() === 1"
+                    class="flex items-center gap-2 px-4 py-2 rounded-lg border border-border hover:bg-accent transition-colors disabled:opacity-50 text-sm">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/>
+              </svg>
+              Previous
+            </button>
+            <span class="text-sm text-muted-foreground">Page {{ currentPage() }} of {{ totalPages() }}</span>
+            <button (click)="nextPage()" [disabled]="currentPage() === totalPages()"
+                    class="flex items-center gap-2 px-4 py-2 rounded-lg border border-border hover:bg-accent transition-colors disabled:opacity-50 text-sm">
+              Next
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+              </svg>
+            </button>
+          </div>
+        }
+
+        <!-- AI Explanation Modal -->
+        @if (showAIModal()) {
+          <div class="fixed inset-0 z-50 flex items-center justify-center p-4">
+            <div class="absolute inset-0 bg-black/50 backdrop-blur-sm" (click)="showAIModal.set(false)"></div>
+            <div class="relative bg-card border border-border rounded-2xl p-6 max-w-3xl w-full shadow-2xl max-h-[90vh] overflow-y-auto animate-fade-in">
+              <div class="flex items-center gap-2 mb-6">
+                <svg class="w-5 h-5 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"/>
+                </svg>
+                <h2 class="text-xl font-bold">AI Explanation</h2>
+                <button (click)="showAIModal.set(false)" class="ml-auto text-muted-foreground hover:text-foreground p-1">
+                  <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+                  </svg>
+                </button>
+              </div>
+
+              @if (aiLoading()) {
+                <div class="flex flex-col items-center justify-center py-12">
+                  <div class="w-8 h-8 border-2 border-primary border-t-transparent rounded-full animate-spin mb-4"></div>
+                  <p class="text-muted-foreground">Generating explanation...</p>
+                </div>
+              } @else {
+                <div class="space-y-6">
+                  <div>
+                    <h4 class="font-semibold mb-2">{{ selectedReq()?.['#'] }} — {{ selectedReq()?.Area || 'General' }}</h4>
+                    <p class="text-sm text-muted-foreground">{{ selectedReq()?.['Verification Requirement'] }}</p>
+                  </div>
+                  <div>
+                    <h4 class="font-semibold mb-2">Understanding this Requirement</h4>
+                    <p class="text-sm text-muted-foreground">This requirement ensures that all input and output data is properly validated, sanitized, and encoded to prevent security vulnerabilities such as injection attacks, XSS, and data leakage.</p>
+                  </div>
+                  <div>
+                    <h4 class="font-semibold mb-3">Implementation Example</h4>
+                    <div class="flex gap-2 mb-3">
+                      @for (lang of langs; track lang) {
+                        <button (click)="selectedLang.set(lang)"
+                                class="px-3 py-1.5 rounded-lg text-sm font-medium transition-colors"
+                                [ngClass]="selectedLang() === lang ? 'bg-primary text-primary-foreground' : 'border border-border hover:bg-accent'">
+                          {{ lang }}
+                        </button>
+                      }
+                    </div>
+                    <pre class="p-4 rounded-lg bg-accent overflow-x-auto text-sm font-mono"><code>{{ codeExample() }}</code></pre>
+                  </div>
+                  <div>
+                    <h4 class="font-semibold mb-2">Testing Approach</h4>
+                    <p class="text-sm text-muted-foreground">Test with valid inputs, invalid inputs, edge cases, and malicious payloads. Use automated testing tools and manual penetration testing.</p>
+                  </div>
+                </div>
+              }
+            </div>
+          </div>
+        }
+      </div>
+    </div>
+  

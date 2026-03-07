@@ -1,0 +1,63 @@
+/* CI/CD Guide */
+.step-card {
+  position: relative;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.step-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+}
+
+.step-number {
+  position: absolute;
+  top: -0.75rem;
+  left: -0.75rem;
+  width: 2rem;
+  height: 2rem;
+  border-radius: 50%;
+  background: hsl(var(--primary));
+  color: hsl(var(--primary-foreground));
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: 0.875rem;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+}
+
+.platform-tab {
+  transition: color 0.15s ease, border-color 0.15s ease, background-color 0.15s ease;
+}
+
+.code-block {
+  font-family: 'Fira Code', 'Cascadia Code', 'JetBrains Mono', monospace;
+  font-size: 0.8125rem;
+  line-height: 1.7;
+  tab-size: 2;
+}
+
+.copy-btn {
+  backdrop-filter: blur(8px);
+  transition: background-color 0.15s ease;
+}
+
+.copy-btn:hover {
+  background-color: hsl(var(--accent));
+}
+
+.env-var-row {
+  transition: background-color 0.15s ease;
+}
+
+.env-var-row:hover {
+  background-color: hsl(var(--accent));
+}
+
+.practice-card {
+  transition: border-color 0.2s ease;
+}
+
+.practice-card:hover {
+  border-color: hsl(var(--primary) / 0.3);
+}

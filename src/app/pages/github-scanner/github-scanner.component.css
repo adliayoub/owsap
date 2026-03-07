@@ -1,0 +1,56 @@
+/* GitHub Scanner */
+.scan-input-wrapper {
+  position: relative;
+}
+
+.scan-input-wrapper input:focus {
+  outline: none;
+  box-shadow: 0 0 0 2px hsl(var(--ring) / 0.3);
+}
+
+.progress-bar {
+  transition: width 0.5s ease;
+  border-radius: 9999px;
+  height: 0.5rem;
+  background: hsl(var(--primary));
+}
+
+.stage-card {
+  transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
+}
+
+.stage-card.running {
+  animation: stagePulse 1s ease-in-out infinite;
+}
+
+@keyframes stagePulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.7; }
+}
+
+.vuln-row {
+  cursor: pointer;
+  transition: background-color 0.15s ease;
+}
+
+.vuln-row:hover {
+  background-color: hsl(var(--accent));
+}
+
+.modal-overlay {
+  animation: fadeIn 0.2s ease;
+}
+
+.modal-content {
+  animation: scaleIn 0.2s ease;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes scaleIn {
+  from { transform: scale(0.95); opacity: 0; }
+  to { transform: scale(1); opacity: 1; }
+}

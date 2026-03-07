@@ -1,0 +1,108 @@
+
+    <div class="min-h-[calc(100vh-4rem)] flex items-center justify-center py-12 px-4">
+      <div class="w-full max-w-md animate-fade-in">
+        <div class="bg-card border border-border/50 rounded-2xl p-8 shadow-xl">
+          <!-- Header -->
+          <div class="text-center mb-8">
+            <div class="w-16 h-16 rounded-2xl bg-primary/10 flex items-center justify-center mx-auto mb-4">
+              <svg class="w-8 h-8 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/>
+              </svg>
+            </div>
+            <h1 class="text-2xl font-bold mb-2">Welcome Back</h1>
+            <p class="text-muted-foreground">Sign in to access your security dashboard</p>
+          </div>
+
+          <!-- Error -->
+          @if (error()) {
+            <div class="mb-6 p-3 rounded-lg bg-destructive/10 border border-destructive/20 flex items-center gap-2 text-destructive text-sm">
+              <svg class="w-4 h-4 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+              </svg>
+              {{ error() }}
+            </div>
+          }
+
+          <!-- Form -->
+          <div class="space-y-5">
+            <div class="space-y-2">
+              <label class="text-sm font-medium">Email</label>
+              <div class="relative">
+                <svg class="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/>
+                </svg>
+                <input type="email" placeholder="you@example.com" [(ngModel)]="email"
+                       class="w-full pl-10 pr-4 py-3 bg-background border border-input rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-ring"
+                       [disabled]="isLoading()" />
+              </div>
+            </div>
+
+            <div class="space-y-2">
+              <label class="text-sm font-medium">Password</label>
+              <div class="relative">
+                <svg class="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/>
+                </svg>
+                <input [type]="showPassword() ? 'text' : 'password'" placeholder="••••••••" [(ngModel)]="password"
+                       class="w-full pl-10 pr-10 py-3 bg-background border border-input rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-ring"
+                       [disabled]="isLoading()" />
+                <button type="button" (click)="togglePassword()"
+                        class="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground">
+                  @if (showPassword()) {
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.88 9.88l-3.29-3.29m7.532 7.532l3.29 3.29M3 3l3.59 3.59m0 0A9.953 9.953 0 0112 5c4.478 0 8.268 2.943 9.543 7a10.025 10.025 0 01-4.132 5.411m0 0L21 21"/>
+                    </svg>
+                  } @else {
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/>
+                    </svg>
+                  }
+                </button>
+              </div>
+            </div>
+
+            <button (click)="handleSubmit()" [disabled]="isLoading()"
+                    class="w-full py-3 rounded-xl bg-primary text-primary-foreground font-medium hover:bg-primary/90 transition-colors disabled:opacity-50 flex items-center justify-center gap-2">
+              @if (isLoading()) {
+                <div class="w-5 h-5 border-2 border-primary-foreground border-t-transparent rounded-full animate-spin"></div>
+              } @else {
+                Sign In
+              }
+            </button>
+          </div>
+
+          <!-- Divider -->
+          <div class="relative my-6">
+            <div class="absolute inset-0 flex items-center"><div class="w-full border-t border-border"></div></div>
+            <div class="relative flex justify-center text-xs uppercase">
+              <span class="bg-card px-2 text-muted-foreground">Or continue with</span>
+            </div>
+          </div>
+
+          <button disabled class="w-full py-3 rounded-xl border border-input flex items-center justify-center gap-2 opacity-50 cursor-not-allowed text-sm font-medium">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 00-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0020 4.77 5.07 5.07 0 0019.91 1S18.73.65 16 2.48a13.38 13.38 0 00-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 005 4.77a5.44 5.44 0 00-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 009 18.13V22"/>
+            </svg>
+            GitHub
+          </button>
+
+          <p class="text-center mt-6 text-sm text-muted-foreground">
+            Don't have an account?
+            <a routerLink="#" class="text-primary hover:underline font-medium ml-1">Sign up</a>
+          </p>
+
+          <!-- Demo Credentials -->
+          <div class="mt-6 p-4 rounded-xl bg-accent/50 border border-border/50">
+            <p class="text-sm font-medium mb-2">Demo Credentials:</p>
+            <div class="text-sm text-muted-foreground space-y-1">
+              <p>Email: <span class="text-foreground">demo&#64;asvs.security</span></p>
+              <p>Password: <span class="text-foreground">demo123</span></p>
+            </div>
+            <button (click)="fillDemo()" class="mt-2 text-primary text-sm hover:underline">
+              Use Demo Credentials
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  

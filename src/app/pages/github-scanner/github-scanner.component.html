@@ -1,0 +1,207 @@
+
+    <div class="min-h-[calc(100vh-4rem)] py-8 px-4">
+      <div class="container mx-auto max-w-5xl">
+        <!-- Header -->
+        <div class="mb-8 animate-fade-in">
+          <h1 class="text-3xl font-bold mb-2">GitHub Repository Scanner</h1>
+          <p class="text-muted-foreground">Analyze your repositories for security vulnerabilities and compliance issues.</p>
+        </div>
+
+        <!-- Scan Input -->
+        <div class="mb-8">
+          <div class="p-6 rounded-xl bg-card border border-border/50">
+            <div class="flex flex-col sm:flex-row gap-4">
+              <div class="flex-1 relative">
+                <svg class="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 00-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0020 4.77 5.07 5.07 0 0019.91 1S18.73.65 16 2.48a13.38 13.38 0 00-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 005 4.77a5.44 5.44 0 00-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 009 18.13V22"/>
+                </svg>
+                <input type="text" placeholder="https://github.com/username/repository"
+                       [(ngModel)]="repoUrl" [disabled]="isScanning()"
+                       class="w-full pl-10 pr-4 py-3 bg-background border border-input rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-ring"/>
+              </div>
+              <button (click)="startScan()" [disabled]="isScanning() || !repoUrl.trim()"
+                      class="px-8 py-3 rounded-xl bg-primary text-primary-foreground font-medium hover:bg-primary/90 transition-colors disabled:opacity-50 flex items-center gap-2">
+                @if (isScanning()) {
+                  <div class="w-5 h-5 border-2 border-primary-foreground border-t-transparent rounded-full animate-spin"></div>
+                  Scanning...
+                } @else {
+                  <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/>
+                  </svg>
+                  Start Scan
+                }
+              </button>
+            </div>
+
+            <!-- Progress -->
+            @if (isScanning()) {
+              <div class="mt-6 animate-fade-in">
+                <div class="w-full bg-accent rounded-full h-2 mb-4">
+                  <div class="bg-primary h-2 rounded-full transition-all duration-500" [style.width.%]="scanProgress()"></div>
+                </div>
+                <div class="grid grid-cols-3 sm:grid-cols-6 gap-2">
+                  @for (stage of stages(); track stage.id) {
+                    <div class="flex flex-col items-center p-3 rounded-lg transition-all text-xs text-center"
+                         [ngClass]="{
+                           'bg-green-500/10 text-green-500': stage.status === 'completed',
+                           'bg-primary/10 text-primary border border-primary/30': stage.status === 'running',
+                           'bg-accent text-muted-foreground': stage.status === 'pending'
+                         }">
+                      <svg class="w-5 h-5 mb-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" [attr.d]="stage.icon"/>
+                      </svg>
+                      {{ stage.name }}
+                    </div>
+                  }
+                </div>
+              </div>
+            }
+          </div>
+        </div>
+
+        <!-- Results -->
+        @if (scanComplete()) {
+          <div class="animate-fade-in">
+            <!-- Stats -->
+            <div class="grid grid-cols-2 sm:grid-cols-5 gap-4 mb-6">
+              @for (stat of scanStats; track stat.label) {
+                <div class="p-4 rounded-xl bg-card border border-border/50 text-center">
+                  <svg class="w-8 h-8 mx-auto mb-2" [class]="stat.color" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" [attr.d]="stat.icon"/>
+                  </svg>
+                  <div class="text-2xl font-bold">{{ stat.value }}</div>
+                  <div class="text-xs text-muted-foreground">{{ stat.label }}</div>
+                </div>
+              }
+            </div>
+
+            <!-- Tabs -->
+            <div class="rounded-xl bg-card border border-border/50 overflow-hidden">
+              <div class="grid grid-cols-3 border-b border-border/50">
+                @for (tab of tabs; track tab.id) {
+                  <button (click)="activeTab.set(tab.id)"
+                          class="flex items-center justify-center gap-2 px-4 py-3 text-sm font-medium transition-colors"
+                          [ngClass]="activeTab() === tab.id ? 'bg-primary/10 text-primary border-b-2 border-primary' : 'text-muted-foreground hover:text-foreground'">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" [attr.d]="tab.icon"/>
+                    </svg>
+                    {{ tab.label }}
+                  </button>
+                }
+              </div>
+
+              <div class="p-6">
+                <!-- Vulnerabilities Tab -->
+                @if (activeTab() === 'vulnerabilities') {
+                  <div class="space-y-3">
+                    @for (vuln of mockVulnerabilities; track vuln.id) {
+                      <div (click)="selectedVuln.set(vuln)"
+                           class="flex items-center justify-between p-4 rounded-lg bg-accent/50 hover:bg-accent cursor-pointer transition-colors group">
+                        <div class="flex items-center gap-4 flex-1 min-w-0">
+                          <span class="text-xs px-2 py-1 rounded-full text-white font-medium flex-shrink-0" [ngClass]="getSeverityClass(vuln.severity)">
+                            {{ vuln.severity }}
+                          </span>
+                          <div class="min-w-0">
+                            <p class="font-medium group-hover:text-primary transition-colors">{{ vuln.title }}</p>
+                            <p class="text-sm text-muted-foreground truncate">{{ vuln.description }}</p>
+                            @if (vuln.filePath) {
+                              <p class="text-xs text-muted-foreground mt-1">📄 {{ vuln.filePath }}</p>
+                            }
+                          </div>
+                        </div>
+                        <svg class="w-5 h-5 text-muted-foreground group-hover:text-primary transition-colors flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+                        </svg>
+                      </div>
+                    }
+                  </div>
+                }
+
+                <!-- Mapping Tab -->
+                @if (activeTab() === 'mapping') {
+                  <div class="space-y-4">
+                    @for (m of asvsMapping; track m.req) {
+                      <div class="flex items-center justify-between p-3 rounded-lg bg-accent/50">
+                        <div>
+                          <p class="font-medium">{{ m.req }}</p>
+                          <p class="text-sm text-muted-foreground">{{ m.category }}</p>
+                        </div>
+                        <span class="text-xs px-3 py-1 rounded-full bg-secondary text-secondary-foreground">{{ m.count }} issue{{ m.count > 1 ? 's' : '' }}</span>
+                      </div>
+                    }
+                  </div>
+                }
+
+                <!-- Export Tab -->
+                @if (activeTab() === 'export') {
+                  <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                    @for (fmt of exportFormats; track fmt.format) {
+                      <button class="p-6 rounded-xl border border-border hover:bg-accent transition-colors flex flex-col items-center gap-2">
+                        <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" [attr.d]="fmt.icon"/>
+                        </svg>
+                        <span class="font-medium">{{ fmt.format }}</span>
+                        <span class="text-xs text-muted-foreground">{{ fmt.desc }}</span>
+                      </button>
+                    }
+                  </div>
+                }
+              </div>
+            </div>
+          </div>
+        }
+
+        <!-- Vuln Detail Modal -->
+        @if (selectedVuln()) {
+          <div class="fixed inset-0 z-50 flex items-center justify-center p-4" (click)="selectedVuln.set(null)">
+            <div class="absolute inset-0 bg-black/50" (click)="selectedVuln.set(null)"></div>
+            <div class="relative bg-card border border-border rounded-2xl p-6 max-w-2xl w-full shadow-2xl animate-fade-in" (click)="$event.stopPropagation()">
+              <div class="flex items-center gap-3 mb-6">
+                <span class="text-xs px-2 py-1 rounded-full text-white font-medium" [ngClass]="getSeverityClass(selectedVuln()!.severity)">
+                  {{ selectedVuln()!.severity }}
+                </span>
+                <h2 class="text-xl font-bold">{{ selectedVuln()!.title }}</h2>
+                <button (click)="selectedVuln.set(null)" class="ml-auto text-muted-foreground hover:text-foreground">
+                  <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+                  </svg>
+                </button>
+              </div>
+              <div class="space-y-4">
+                <div>
+                  <h4 class="font-medium mb-1">Description</h4>
+                  <p class="text-sm text-muted-foreground">{{ selectedVuln()!.description }}</p>
+                </div>
+                @if (selectedVuln()!.filePath) {
+                  <div>
+                    <h4 class="font-medium mb-1">Location</h4>
+                    <code class="text-sm bg-accent px-2 py-1 rounded">{{ selectedVuln()!.filePath }}</code>
+                  </div>
+                }
+                @if (selectedVuln()!.remediation) {
+                  <div>
+                    <h4 class="font-medium mb-1">Remediation</h4>
+                    <p class="text-sm text-muted-foreground">{{ selectedVuln()!.remediation }}</p>
+                  </div>
+                }
+                <div class="flex gap-2 pt-4">
+                  <button class="flex-1 py-3 rounded-xl bg-primary text-primary-foreground font-medium hover:bg-primary/90 transition-colors flex items-center justify-center gap-2">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                    </svg>
+                    Mark as Resolved
+                  </button>
+                  <button class="px-6 py-3 rounded-xl border border-border hover:bg-accent transition-colors flex items-center gap-2">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 00-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0020 4.77 5.07 5.07 0 0019.91 1S18.73.65 16 2.48a13.38 13.38 0 00-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 005 4.77a5.44 5.44 0 00-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 009 18.13V22"/>
+                    </svg>
+                    Create Issue
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        }
+      </div>
+    </div>
+  

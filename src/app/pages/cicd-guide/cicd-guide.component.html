@@ -1,0 +1,119 @@
+
+    <div class="min-h-[calc(100vh-4rem)] py-8 px-4">
+      <div class="container mx-auto max-w-5xl">
+        <!-- Header -->
+        <div class="mb-8 animate-fade-in">
+          <h1 class="text-3xl font-bold mb-2">CI/CD Integration Guide</h1>
+          <p class="text-muted-foreground">Integrate ASVS security scanning into your continuous integration pipeline</p>
+        </div>
+
+        <!-- Steps -->
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-12">
+          @for (step of steps; track step.title; let i = $index) {
+            <div class="relative p-6 pt-8 rounded-xl bg-card border border-border/50">
+              <div class="absolute -top-3 -left-3 w-8 h-8 rounded-full bg-primary flex items-center justify-center text-primary-foreground font-bold text-sm">
+                {{ i + 1 }}
+              </div>
+              <svg class="w-8 h-8 text-primary mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" [attr.d]="step.icon"/>
+              </svg>
+              <h3 class="font-semibold mb-2">{{ step.title }}</h3>
+              <p class="text-sm text-muted-foreground">{{ step.description }}</p>
+            </div>
+          }
+        </div>
+
+        <!-- Platform Tabs -->
+        <div class="mb-12 rounded-xl bg-card border border-border/50 overflow-hidden">
+          <div class="p-6 border-b border-border/50">
+            <h2 class="text-xl font-bold mb-1">Platform Configuration</h2>
+            <p class="text-sm text-muted-foreground">Choose your CI/CD platform and copy the configuration</p>
+          </div>
+          <div class="border-b border-border/50">
+            <div class="flex">
+              @for (tab of platformTabs; track tab.id) {
+                <button (click)="activeTab.set(tab.id)"
+                        class="flex items-center gap-2 px-6 py-4 text-sm font-medium transition-colors border-b-2"
+                        [ngClass]="activeTab() === tab.id ? 'border-primary text-primary bg-primary/5' : 'border-transparent text-muted-foreground hover:text-foreground'">
+                  <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" [attr.d]="tab.icon"/>
+                  </svg>
+                  {{ tab.label }}
+                </button>
+              }
+            </div>
+          </div>
+          <div class="p-6">
+            @for (tab of platformTabs; track tab.id) {
+              @if (activeTab() === tab.id) {
+                <div class="relative">
+                  <pre class="p-4 rounded-lg bg-accent overflow-x-auto text-sm"><code>{{ tab.config }}</code></pre>
+                  <button (click)="copy(tab.id, tab.config)"
+                          class="absolute top-2 right-2 flex items-center gap-2 px-3 py-1.5 rounded-lg border border-border bg-card hover:bg-accent transition-colors text-xs">
+                    @if (copied() === tab.id) {
+                      <svg class="w-4 h-4 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                      </svg>
+                      Copied
+                    } @else {
+                      <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"/>
+                      </svg>
+                      Copy
+                    }
+                  </button>
+                </div>
+                <p class="text-sm text-muted-foreground mt-4">{{ tab.note }}</p>
+              }
+            }
+          </div>
+        </div>
+
+        <!-- Best Practices -->
+        <div class="mb-12">
+          <h2 class="text-2xl font-bold mb-6">Best Practices</h2>
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            @for (p of bestPractices; track p.title) {
+              <div class="p-6 rounded-xl bg-card border border-border/50">
+                <div class="flex items-start gap-4">
+                  <div class="w-10 h-10 rounded-lg flex items-center justify-center flex-shrink-0"
+                       [ngClass]="p.severity === 'Critical' ? 'bg-red-500/10 text-red-500' : p.severity === 'High' ? 'bg-orange-500/10 text-orange-500' : 'bg-blue-500/10 text-blue-500'">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/>
+                    </svg>
+                  </div>
+                  <div>
+                    <div class="flex items-center gap-2 mb-1">
+                      <h3 class="font-semibold">{{ p.title }}</h3>
+                      <span class="text-xs px-2 py-0.5 rounded-full border border-border">{{ p.severity }}</span>
+                    </div>
+                    <p class="text-sm text-muted-foreground">{{ p.description }}</p>
+                  </div>
+                </div>
+              </div>
+            }
+          </div>
+        </div>
+
+        <!-- Environment Variables -->
+        <div class="rounded-xl bg-card border border-border/50 overflow-hidden">
+          <div class="p-6 border-b border-border/50">
+            <h2 class="text-xl font-bold">Required Environment Variables</h2>
+          </div>
+          <div class="p-6 space-y-3">
+            @for (env of envVars; track env.name) {
+              <div class="flex items-center justify-between p-3 rounded-lg bg-accent/50">
+                <div>
+                  <code class="text-sm font-medium">{{ env.name }}</code>
+                  <p class="text-sm text-muted-foreground">{{ env.description }}</p>
+                </div>
+                @if (env.required) {
+                  <span class="text-xs px-2 py-1 rounded-full bg-red-500 text-white font-medium">Required</span>
+                }
+              </div>
+            }
+          </div>
+        </div>
+      </div>
+    </div>
+  

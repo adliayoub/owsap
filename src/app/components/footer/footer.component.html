@@ -1,0 +1,62 @@
+
+    <footer class="border-t border-border/40 bg-background/50 backdrop-blur-sm">
+      <div class="container mx-auto px-4 py-12">
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-8">
+          <!-- Brand -->
+          <div class="lg:col-span-2">
+            <a routerLink="/" class="flex items-center gap-2 mb-4">
+              <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-primary to-primary/60 flex items-center justify-center">
+                <svg class="w-6 h-6 text-primary-foreground" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/>
+                </svg>
+              </div>
+              <span class="text-xl font-bold">ASVSSecurity</span>
+            </a>
+            <p class="text-muted-foreground text-sm max-w-sm mb-6">
+              Professional security scanning platform powered by OWASP ASVS standards.
+              Protect your applications with industry-leading security verification.
+            </p>
+            <div class="flex gap-3">
+              @for (icon of socialIcons; track icon.label) {
+                <a href="#" class="w-10 h-10 rounded-lg bg-accent flex items-center justify-center text-muted-foreground hover:text-foreground hover:bg-primary/10 transition-colors"
+                   [attr.aria-label]="icon.label">
+                  <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" [attr.d]="icon.path"/>
+                  </svg>
+                </a>
+              }
+            </div>
+          </div>
+
+          <!-- Links -->
+          @for (section of footerSections; track section.category) {
+            <div>
+              <h3 class="font-semibold mb-4">{{ section.category }}</h3>
+              <ul class="space-y-3">
+                @for (link of section.links; track link.label) {
+                  <li>
+                    @if (link.href) {
+                      <a [href]="link.href" target="_blank" rel="noopener noreferrer"
+                         class="text-sm text-muted-foreground hover:text-foreground transition-colors">
+                        {{ link.label }}
+                      </a>
+                    } @else {
+                      <a [routerLink]="link.path"
+                         class="text-sm text-muted-foreground hover:text-foreground transition-colors">
+                        {{ link.label }}
+                      </a>
+                    }
+                  </li>
+                }
+              </ul>
+            </div>
+          }
+        </div>
+
+        <div class="mt-12 pt-8 border-t border-border/40 flex flex-col md:flex-row justify-between items-center gap-4">
+          <p class="text-sm text-muted-foreground">&copy; {{ year }} ASVS Security. All rights reserved.</p>
+          <p class="text-sm text-muted-foreground">Powered by <span class="text-primary">OWASP ASVS</span> Standards</p>
+        </div>
+      </div>
+    </footer>
+  
