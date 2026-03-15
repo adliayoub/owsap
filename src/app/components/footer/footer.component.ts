@@ -1,5 +1,6 @@
-import { Component } from '@angular/core';
+import { Component, inject, computed } from '@angular/core';
 import { RouterLink } from '@angular/router';
+import { TranslationService } from '../../services/translation.service';
 
 @Component({
   selector: 'app-footer',
@@ -9,6 +10,7 @@ import { RouterLink } from '@angular/router';
   styleUrls: ['./footer.component.css']
 })
 export class FooterComponent {
+  ts = inject(TranslationService);
   year = new Date().getFullYear();
 
   socialIcons = [
@@ -18,33 +20,33 @@ export class FooterComponent {
     { label: 'Email', path: 'M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z M22 6l-10 7L2 6' },
   ];
 
-  footerSections = [
+  footerSections = computed(() => [
     {
-      category: 'Product',
+      category: this.ts.t('footer.product'),
       links: [
-        { label: 'GitHub Scanner', path: '/scanner' },
-        { label: 'ASVS Checklist', path: '/checklist' },
-        { label: 'Scan History', path: '/history' },
-        { label: 'CI/CD Integration', path: '/cicd-guide' },
+        { label: this.ts.t('footer.githubScanner'), path: '/scanner' },
+        { label: this.ts.t('footer.asvsChecklist'), path: '/checklist' },
+        { label: this.ts.t('footer.scanHistory'), path: '/history' },
+        { label: this.ts.t('footer.cicdIntegration'), path: '/cicd-guide' },
       ]
     },
     {
-      category: 'Resources',
+      category: this.ts.t('footer.resources'),
       links: [
         { label: 'OWASP ASVS', href: 'https://owasp.org/www-project-application-security-verification-standard/' },
-        { label: 'Documentation', path: '#' },
-        { label: 'API Reference', path: '#' },
-        { label: 'Security Blog', path: '#' },
+        { label: this.ts.t('footer.documentation'), path: '#' },
+        { label: this.ts.t('footer.apiReference'), path: '#' },
+        { label: this.ts.t('footer.securityBlog'), path: '#' },
       ]
     },
     {
-      category: 'Legal',
+      category: this.ts.t('footer.legal'),
       links: [
-        { label: 'Privacy Policy', path: '#' },
-        { label: 'Terms of Service', path: '#' },
-        { label: 'Cookie Policy', path: '#' },
-        { label: 'Security Disclosure', path: '#' },
+        { label: this.ts.t('footer.privacyPolicy'), path: '#' },
+        { label: this.ts.t('footer.termsOfService'), path: '#' },
+        { label: this.ts.t('footer.cookiePolicy'), path: '#' },
+        { label: this.ts.t('footer.securityDisclosure'), path: '#' },
       ]
     }
-  ];
+  ]);
 }

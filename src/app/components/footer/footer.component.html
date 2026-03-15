@@ -13,8 +13,7 @@
               <span class="text-xl font-bold">ASVSSecurity</span>
             </a>
             <p class="text-muted-foreground text-sm max-w-sm mb-6">
-              Professional security scanning platform powered by OWASP ASVS standards.
-              Protect your applications with industry-leading security verification.
+              {{ ts.t('footer.desc') }}
             </p>
             <div class="flex gap-3">
               @for (icon of socialIcons; track icon.label) {
@@ -29,7 +28,7 @@
           </div>
 
           <!-- Links -->
-          @for (section of footerSections; track section.category) {
+          @for (section of footerSections(); track section.category) {
             <div>
               <h3 class="font-semibold mb-4">{{ section.category }}</h3>
               <ul class="space-y-3">
@@ -54,8 +53,8 @@
         </div>
 
         <div class="mt-12 pt-8 border-t border-border/40 flex flex-col md:flex-row justify-between items-center gap-4">
-          <p class="text-sm text-muted-foreground">&copy; {{ year }} ASVS Security. All rights reserved.</p>
-          <p class="text-sm text-muted-foreground">Powered by <span class="text-primary">OWASP ASVS</span> Standards</p>
+          <p class="text-sm text-muted-foreground">&copy; {{ year }} ASVS Security. {{ ts.t('footer.rights') }}</p>
+          <p class="text-sm text-muted-foreground">{{ ts.t('footer.poweredBy') }} <span class="text-primary">OWASP ASVS</span> {{ ts.t('footer.standards') }}</p>
         </div>
       </div>
     </footer>

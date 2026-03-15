@@ -9,8 +9,8 @@
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/>
               </svg>
             </div>
-            <h1 class="text-2xl font-bold mb-2">Welcome Back</h1>
-            <p class="text-muted-foreground">Sign in to access your security dashboard</p>
+            <h1 class="text-2xl font-bold mb-2">{{ ts.t('login.welcomeBack') }}</h1>
+            <p class="text-muted-foreground">{{ ts.t('login.signInDesc') }}</p>
           </div>
 
           <!-- Error -->
@@ -26,7 +26,7 @@
           <!-- Form -->
           <div class="space-y-5">
             <div class="space-y-2">
-              <label class="text-sm font-medium">Email</label>
+              <label class="text-sm font-medium">{{ ts.t('login.email') }}</label>
               <div class="relative">
                 <svg class="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/>
@@ -38,7 +38,7 @@
             </div>
 
             <div class="space-y-2">
-              <label class="text-sm font-medium">Password</label>
+              <label class="text-sm font-medium">{{ ts.t('login.password') }}</label>
               <div class="relative">
                 <svg class="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/>
@@ -66,7 +66,7 @@
               @if (isLoading()) {
                 <div class="w-5 h-5 border-2 border-primary-foreground border-t-transparent rounded-full animate-spin"></div>
               } @else {
-                Sign In
+                {{ ts.t('login.signIn') }}
               }
             </button>
           </div>
@@ -75,7 +75,7 @@
           <div class="relative my-6">
             <div class="absolute inset-0 flex items-center"><div class="w-full border-t border-border"></div></div>
             <div class="relative flex justify-center text-xs uppercase">
-              <span class="bg-card px-2 text-muted-foreground">Or continue with</span>
+              <span class="bg-card px-2 text-muted-foreground">{{ ts.t('login.orContinueWith') }}</span>
             </div>
           </div>
 
@@ -87,19 +87,19 @@
           </button>
 
           <p class="text-center mt-6 text-sm text-muted-foreground">
-            Don't have an account?
-            <a routerLink="#" class="text-primary hover:underline font-medium ml-1">Sign up</a>
+            {{ ts.t('login.noAccount') }}
+            <a routerLink="#" class="text-primary hover:underline font-medium ml-1">{{ ts.t('login.signUp') }}</a>
           </p>
 
           <!-- Demo Credentials -->
           <div class="mt-6 p-4 rounded-xl bg-accent/50 border border-border/50">
-            <p class="text-sm font-medium mb-2">Demo Credentials:</p>
+            <p class="text-sm font-medium mb-2">{{ ts.t('login.demoCredentials') }}</p>
             <div class="text-sm text-muted-foreground space-y-1">
               <p>Email: <span class="text-foreground">demo&#64;asvs.security</span></p>
-              <p>Password: <span class="text-foreground">demo123</span></p>
+              <p>{{ ts.t('login.password') }}: <span class="text-foreground">demo123</span></p>
             </div>
             <button (click)="fillDemo()" class="mt-2 text-primary text-sm hover:underline">
-              Use Demo Credentials
+              {{ ts.t('login.useDemoCredentials') }}
             </button>
           </div>
         </div>

@@ -14,7 +14,7 @@
         <!-- Desktop Nav -->
         <div class="hidden md:flex items-center gap-1">
           @if (authService.isAuthenticated()) {
-            @for (link of navLinks; track link.path) {
+            @for (link of navLinks(); track link.path) {
               <a [routerLink]="link.path"
                  routerLinkActive="bg-primary/10 text-primary"
                  [routerLinkActiveOptions]="{exact: false}"
@@ -27,10 +27,21 @@
 
         <!-- Actions -->
         <div class="flex items-center gap-2">
+          <!-- Language Toggle -->
+          <button (click)="ts.toggleLang()"
+                  class="h-9 px-3 rounded-full flex items-center gap-1.5 border border-border hover:bg-accent transition-colors text-xs font-semibold"
+                  [title]="ts.lang() === 'en' ? 'Passer en français' : 'Switch to English'">
+            @if (ts.lang() === 'en') {
+              🇬🇧 EN
+            } @else {
+              🇫🇷 FR
+            }
+          </button>
+
           <!-- Theme Toggle -->
           <button (click)="themeService.toggleTheme()"
                   class="w-10 h-10 rounded-full flex items-center justify-center hover:bg-accent transition-colors"
-                  [title]="themeService.theme() === 'dark' ? 'Switch to light mode' : 'Switch to dark mode'">
+                  [title]="themeService.theme() === 'dark' ? ts.t('nav.lightMode') : ts.t('nav.darkMode')">
             @if (themeService.theme() === 'dark') {
               <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"/>
@@ -60,7 +71,7 @@
               @if (userMenuOpen()) {
                 <div class="absolute right-0 top-full mt-2 w-48 bg-card border border-border rounded-xl shadow-2xl z-50">
                   <div class="px-4 py-3 border-b border-border/50">
-                    <p class="text-xs text-muted-foreground">Signed in as</p>
+                    <p class="text-xs text-muted-foreground">{{ ts.t('nav.signedAs') }}</p>
                     <p class="text-sm font-medium truncate">{{ authService.user()?.email }}</p>
                   </div>
                   <button (click)="handleLogout()"
@@ -68,7 +79,7 @@
                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"/>
                     </svg>
-                    Sign Out
+                    {{ ts.t('nav.signOut') }}
                   </button>
                 </div>
               }
@@ -76,7 +87,7 @@
           } @else {
             <a routerLink="/login">
               <button class="rounded-full px-6 py-2 bg-primary text-primary-foreground text-sm font-medium hover:bg-primary/90 transition-colors">
-                Sign In
+                {{ ts.t('nav.signIn') }}
               </button>
             </a>
           }
@@ -102,7 +113,7 @@
         <div class="md:hidden border-t border-border/40 bg-background/95 backdrop-blur-sm">
           <div class="container mx-auto px-4 py-4 space-y-1">
             @if (authService.isAuthenticated()) {
-              @for (link of navLinks; track link.path) {
+              @for (link of navLinks(); track link.path) {
                 <a [routerLink]="link.path"
                    routerLinkActive="bg-primary/10 text-primary"
                    (click)="mobileMenuOpen.set(false)"
@@ -113,7 +124,7 @@
             } @else {
               <a routerLink="/login" (click)="mobileMenuOpen.set(false)"
                  class="block px-4 py-3 rounded-lg text-sm font-medium text-muted-foreground hover:text-foreground hover:bg-accent transition-all">
-                Sign In
+                {{ ts.t('nav.signIn') }}
               </a>
             }
           </div>

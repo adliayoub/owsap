@@ -2,26 +2,26 @@
     <div class="min-h-[calc(100vh-4rem)] py-8 px-4" (click)="openMenu.set(null)">
       <div class="container mx-auto max-w-6xl">
         <div class="mb-8 animate-fade-in">
-          <h1 class="text-3xl font-bold mb-2">Scan History</h1>
-          <p class="text-muted-foreground">View and manage all your previous security scans</p>
+          <h1 class="text-3xl font-bold mb-2">{{ ts.t('history.title') }}</h1>
+          <p class="text-muted-foreground">{{ ts.t('history.desc') }}</p>
         </div>
 
         <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
           <div class="p-4 rounded-xl bg-card border border-border/50">
             <div class="text-3xl font-bold">{{ stats().total }}</div>
-            <div class="text-sm text-muted-foreground">Total Scans</div>
+            <div class="text-sm text-muted-foreground">{{ ts.t('history.totalScans') }}</div>
           </div>
           <div class="p-4 rounded-xl bg-card border border-border/50">
             <div class="text-3xl font-bold text-green-500">{{ stats().completed }}</div>
-            <div class="text-sm text-muted-foreground">Completed</div>
+            <div class="text-sm text-muted-foreground">{{ ts.t('history.completed') }}</div>
           </div>
           <div class="p-4 rounded-xl bg-card border border-border/50">
             <div class="text-3xl font-bold text-red-500">{{ stats().failed }}</div>
-            <div class="text-sm text-muted-foreground">Failed</div>
+            <div class="text-sm text-muted-foreground">{{ ts.t('history.failed') }}</div>
           </div>
           <div class="p-4 rounded-xl bg-card border border-border/50">
             <div class="text-3xl font-bold">{{ stats().avgCoverage }}%</div>
-            <div class="text-sm text-muted-foreground">Avg ASVS</div>
+            <div class="text-sm text-muted-foreground">{{ ts.t('history.avgAsvs') }}</div>
           </div>
         </div>
 
@@ -30,23 +30,23 @@
             <svg class="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
             </svg>
-            <input type="text" placeholder="Search repositories..."
+            <input type="text" [placeholder]="ts.t('history.searchRepos')"
                    [ngModel]="searchQuery()" (ngModelChange)="searchQuery.set($event)"
                    class="w-full pl-10 pr-4 py-3 bg-background border border-input rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-ring"/>
           </div>
           <select [ngModel]="statusFilter()" (ngModelChange)="statusFilter.set($event)"
                   class="px-4 py-3 bg-background border border-input rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-ring w-full md:w-44">
-            <option value="all">All Status</option>
-            <option value="completed">Completed</option>
-            <option value="failed">Failed</option>
-            <option value="in progress">In Progress</option>
+            <option value="all">{{ ts.t('history.allStatus') }}</option>
+            <option value="completed">{{ ts.t('history.completedStatus') }}</option>
+            <option value="failed">{{ ts.t('history.failedStatus') }}</option>
+            <option value="in progress">{{ ts.t('history.inProgress') }}</option>
           </select>
           <a routerLink="/scanner">
             <button class="w-full md:w-auto flex items-center gap-2 px-6 py-3 rounded-xl bg-primary text-primary-foreground hover:bg-primary/90 transition-colors font-medium">
               <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6"/>
               </svg>
-              New Scan
+              {{ ts.t('history.newScan') }}
             </button>
           </a>
         </div>
@@ -56,12 +56,12 @@
             <table class="w-full">
               <thead>
                 <tr class="border-b border-border/50">
-                  <th class="text-left p-4 font-medium text-sm">Repository</th>
-                  <th class="text-left p-4 font-medium text-sm">Date</th>
-                  <th class="text-left p-4 font-medium text-sm">Status</th>
-                  <th class="text-left p-4 font-medium text-sm">Vulnerabilities</th>
+                  <th class="text-left p-4 font-medium text-sm">{{ ts.t('history.repository') }}</th>
+                  <th class="text-left p-4 font-medium text-sm">{{ ts.t('history.date') }}</th>
+                  <th class="text-left p-4 font-medium text-sm">{{ ts.t('history.status') }}</th>
+                  <th class="text-left p-4 font-medium text-sm">{{ ts.t('history.vulnerabilities') }}</th>
                   <th class="text-left p-4 font-medium text-sm">ASVS</th>
-                  <th class="text-left p-4 font-medium text-sm">Actions</th>
+                  <th class="text-left p-4 font-medium text-sm">{{ ts.t('history.actions') }}</th>
                 </tr>
               </thead>
               <tbody>
@@ -90,23 +90,23 @@
                     </td>
                     <td class="p-4">
                       <span class="text-xs px-2 py-1 rounded-full font-medium" [ngClass]="getStatusClass(scan.status)">
-                        {{ scan.status }}
+                        {{ getStatusLabel(scan.status) }}
                       </span>
                     </td>
                     <td class="p-4">
                       @if (scan.status === 'Completed') {
                         <div class="flex flex-wrap gap-1">
                           @if (scan.vulnerabilities.critical > 0) {
-                            <span class="text-xs px-2 py-0.5 rounded-full bg-red-500 text-white">{{ scan.vulnerabilities.critical }} Critical</span>
+                            <span class="text-xs px-2 py-0.5 rounded-full bg-red-500 text-white">{{ scan.vulnerabilities.critical }} {{ ts.t('history.critical') }}</span>
                           }
                           @if (scan.vulnerabilities.high > 0) {
-                            <span class="text-xs px-2 py-0.5 rounded-full bg-orange-500 text-white">{{ scan.vulnerabilities.high }} High</span>
+                            <span class="text-xs px-2 py-0.5 rounded-full bg-orange-500 text-white">{{ scan.vulnerabilities.high }} {{ ts.t('history.high') }}</span>
                           }
                           @if (scan.vulnerabilities.medium > 0) {
-                            <span class="text-xs px-2 py-0.5 rounded-full bg-yellow-500 text-black">{{ scan.vulnerabilities.medium }} Medium</span>
+                            <span class="text-xs px-2 py-0.5 rounded-full bg-yellow-500 text-black">{{ scan.vulnerabilities.medium }} {{ ts.t('history.medium') }}</span>
                           }
                           @if (scan.vulnerabilities.low > 0) {
-                            <span class="text-xs px-2 py-0.5 rounded-full bg-blue-500 text-white">{{ scan.vulnerabilities.low }} Low</span>
+                            <span class="text-xs px-2 py-0.5 rounded-full bg-blue-500 text-white">{{ scan.vulnerabilities.low }} {{ ts.t('history.low') }}</span>
                           }
                         </div>
                       } @else {
@@ -140,20 +140,20 @@
                               <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
                               </svg>
-                              View Details
+                              {{ ts.t('history.viewDetails') }}
                             </button>
                             <button class="w-full flex items-center gap-2 px-4 py-2.5 text-sm hover:bg-accent transition-colors">
                               <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/>
                               </svg>
-                              Export Report
+                              {{ ts.t('history.exportReport') }}
                             </button>
                             <button (click)="deleteScan(scan.id)"
                                     class="w-full flex items-center gap-2 px-4 py-2.5 text-sm text-destructive hover:bg-accent rounded-b-xl transition-colors">
                               <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/>
                               </svg>
-                              Delete
+                              {{ ts.t('history.delete') }}
                             </button>
                           </div>
                         }
@@ -170,7 +170,7 @@
               <svg class="w-12 h-12 text-muted-foreground mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/>
               </svg>
-              <p class="text-muted-foreground">No scans found</p>
+              <p class="text-muted-foreground">{{ ts.t('history.noScans') }}</p>
             </div>
           }
         </div>

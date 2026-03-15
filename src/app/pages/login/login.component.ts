@@ -2,6 +2,7 @@ import { Component, signal, inject } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
+import { TranslationService } from '../../services/translation.service';
 
 @Component({
   selector: 'app-login',
@@ -13,6 +14,7 @@ import { AuthService } from '../../services/auth.service';
 export class LoginComponent {
   private authService = inject(AuthService);
   private router = inject(Router);
+  ts = inject(TranslationService);
 
   email = '';
   password = '';
@@ -30,9 +32,9 @@ export class LoginComponent {
     try {
       const ok = await this.authService.login(this.email, this.password);
       if (ok) this.router.navigate(['/dashboard']);
-      else this.error.set('Invalid email or password. Try demo@asvs.security / demo123');
+      else this.error.set(this.ts.t('login.invalidCredentials'));
     } catch {
-      this.error.set('An error occurred. Please try again.');
+      this.error.set(this.ts.t('login.error'));
     } finally {
       this.isLoading.set(false);
     }

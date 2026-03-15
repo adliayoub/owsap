@@ -1,8 +1,9 @@
-import { Component, signal, inject, HostListener } from '@angular/core';
+import { Component, signal, inject, HostListener, computed } from '@angular/core';
 import { RouterLink, RouterLinkActive, Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { AuthService } from '../../services/auth.service';
 import { ThemeService } from '../../services/theme.service';
+import { TranslationService } from '../../services/translation.service';
 
 @Component({
   selector: 'app-navbar',
@@ -14,20 +15,20 @@ import { ThemeService } from '../../services/theme.service';
 export class NavbarComponent {
   authService = inject(AuthService);
   themeService = inject(ThemeService);
+  ts = inject(TranslationService);
   private router = inject(Router);
 
   mobileMenuOpen = signal(false);
   userMenuOpen = signal(false);
 
-  navLinks = [
-    { path: '/dashboard', label: 'Dashboard' },
-    { path: '/scanner', label: 'GitHub Scanner' },
-    { path: '/history', label: 'Scan History' },
-    { path: '/checklist', label: 'ASVS Checklist' },
-    { path: '/cicd-guide', label: 'CI/CD Guide' },
-  ];
+  navLinks = computed(() => [
+    { path: '/dashboard', label: this.ts.t('nav.dashboard') },
+    { path: '/scanner', label: this.ts.t('nav.scanner') },
+    { path: '/history', label: this.ts.t('nav.history') },
+    { path: '/checklist', label: this.ts.t('nav.checklist') },
+    { path: '/cicd-guide', label: this.ts.t('nav.cicd') },
+  ]);
 
-  // Close dropdowns when clicking anywhere on document
   @HostListener('document:click')
   onDocumentClick() {
     this.userMenuOpen.set(false);

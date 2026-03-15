@@ -1,8 +1,9 @@
-import { Component, signal, computed } from '@angular/core';
+import { Component, signal, computed, inject } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { ScanHistoryItem } from '../../models';
+import { TranslationService } from '../../services/translation.service';
 
 const MOCK_HISTORY: ScanHistoryItem[] = [
   { id: 'scan-001', repository: 'ecommerce-platform', url: 'https://github.com/acme/ecommerce-platform', date: '2026-03-04', status: 'Completed', vulnerabilities: { critical: 2, high: 4, medium: 8, low: 3 }, asvsCoverage: 78 },
@@ -20,6 +21,7 @@ const MOCK_HISTORY: ScanHistoryItem[] = [
   styleUrls: ['./scan-history.component.css']
 })
 export class ScanHistoryComponent {
+  ts = inject(TranslationService);
   scans = signal<ScanHistoryItem[]>(MOCK_HISTORY);
   searchQuery = signal('');
   statusFilter = signal('all');
@@ -52,6 +54,15 @@ export class ScanHistoryComponent {
       'In Progress': 'bg-blue-500/20 text-blue-400',
     };
     return map[s] ?? 'bg-secondary text-secondary-foreground';
+  }
+
+  getStatusLabel(s: string): string {
+    const map: Record<string, string> = {
+      Completed: this.ts.t('history.completedStatus'),
+      Failed: this.ts.t('history.failedStatus'),
+      'In Progress': this.ts.t('history.inProgress'),
+    };
+    return map[s] ?? s;
   }
 
   toggleMenu(id: string) {

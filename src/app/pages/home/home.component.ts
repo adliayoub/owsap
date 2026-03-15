@@ -1,5 +1,6 @@
-import { Component, OnDestroy, ElementRef, ViewChild, AfterViewInit } from '@angular/core';
+import { Component, OnDestroy, ElementRef, ViewChild, AfterViewInit, inject, computed } from '@angular/core';
 import { RouterLink } from '@angular/router';
+import { TranslationService } from '../../services/translation.service';
 
 @Component({
   selector: 'app-home',
@@ -11,32 +12,33 @@ import { RouterLink } from '@angular/router';
 export class HomeComponent implements AfterViewInit, OnDestroy {
   @ViewChild('particleCanvas') canvasRef!: ElementRef<HTMLCanvasElement>;
   private animationId = 0;
+  ts = inject(TranslationService);
 
-  stats = [
-    { value: 50, suffix: '+', label: 'Security Checks' },
-    { value: '10', suffix: 'K+', label: 'Repos Scanned' },
-    { value: '99.9', suffix: '%', label: 'Uptime' },
-    { value: 24, suffix: '/7', label: 'AI Analysis' },
-  ];
+  stats = computed(() => [
+    { value: 50, suffix: '+', label: this.ts.t('home.securityChecks') },
+    { value: '10', suffix: 'K+', label: this.ts.t('home.reposScanned') },
+    { value: '99.9', suffix: '%', label: this.ts.t('home.uptime') },
+    { value: 24, suffix: '/7', label: this.ts.t('home.aiAnalysis') },
+  ]);
 
-  features = [
-    { icon: 'M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2', title: 'Static Analysis', description: 'Detect vulnerabilities in source code with advanced static analysis engines.', color: 'bg-blue-500' },
-    { icon: 'M8 9l3 3-3 3m5 0h3M5 20h14a2 2 0 002-2V6a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z', title: 'Dependency Scan', description: 'Identify outdated and vulnerable packages in your dependencies.', color: 'bg-purple-500' },
-    { icon: 'M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z', title: 'Secret Detection', description: 'Find exposed API keys, passwords, and credentials before they reach production.', color: 'bg-red-500' },
-    { icon: 'M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4', title: 'Configuration Review', description: 'Analyze security configurations and identify misconfigurations.', color: 'bg-green-500' },
-  ];
+  features = computed(() => [
+    { icon: 'M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2', title: this.ts.t('home.feat.staticAnalysis'), description: this.ts.t('home.feat.staticAnalysisDesc'), color: 'bg-blue-500' },
+    { icon: 'M8 9l3 3-3 3m5 0h3M5 20h14a2 2 0 002-2V6a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z', title: this.ts.t('home.feat.depScan'), description: this.ts.t('home.feat.depScanDesc'), color: 'bg-purple-500' },
+    { icon: 'M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z', title: this.ts.t('home.feat.secretDetection'), description: this.ts.t('home.feat.secretDetectionDesc'), color: 'bg-red-500' },
+    { icon: 'M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4', title: this.ts.t('home.feat.configReview'), description: this.ts.t('home.feat.configReviewDesc'), color: 'bg-green-500' },
+  ]);
 
-  additionalFeatures = [
-    { icon: 'M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z', title: 'OWASP ASVS Mapping', description: 'Map detected vulnerabilities to specific OWASP ASVS requirements for comprehensive compliance tracking.', color: 'bg-emerald-500' },
-    { icon: 'M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z', title: 'AI-Powered Analysis', description: 'Leverage advanced AI to summarize findings, classify vulnerabilities, and generate secure code recommendations.', color: 'bg-amber-500' },
-  ];
+  additionalFeatures = computed(() => [
+    { icon: 'M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z', title: this.ts.t('home.feat.asvsMapping'), description: this.ts.t('home.feat.asvsMappingDesc'), color: 'bg-emerald-500' },
+    { icon: 'M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z', title: this.ts.t('home.feat.aiAnalysis'), description: this.ts.t('home.feat.aiAnalysisDesc'), color: 'bg-amber-500' },
+  ]);
 
-  githubFeatures = [
-    'Support for public and private repositories',
-    'Detailed vulnerability reports with severity levels',
-    'AI-powered remediation suggestions',
-    'OWASP ASVS compliance mapping',
-  ];
+  githubFeatures = computed(() => [
+    this.ts.t('home.ghFeat1'),
+    this.ts.t('home.ghFeat2'),
+    this.ts.t('home.ghFeat3'),
+    this.ts.t('home.ghFeat4'),
+  ]);
 
   mockReport = [
     { label: 'SQL Injection detected', severity: 'Critical', dot: 'bg-red-500', badge: 'bg-red-500' },

@@ -3,13 +3,13 @@
       <div class="container mx-auto max-w-5xl">
         <!-- Header -->
         <div class="mb-8 animate-fade-in">
-          <h1 class="text-3xl font-bold mb-2">CI/CD Integration Guide</h1>
-          <p class="text-muted-foreground">Integrate ASVS security scanning into your continuous integration pipeline</p>
+          <h1 class="text-3xl font-bold mb-2">{{ ts.t('cicd.title') }}</h1>
+          <p class="text-muted-foreground">{{ ts.t('cicd.desc') }}</p>
         </div>
 
         <!-- Steps -->
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-12">
-          @for (step of steps; track step.title; let i = $index) {
+          @for (step of steps(); track step.title; let i = $index) {
             <div class="relative p-6 pt-8 rounded-xl bg-card border border-border/50">
               <div class="absolute -top-3 -left-3 w-8 h-8 rounded-full bg-primary flex items-center justify-center text-primary-foreground font-bold text-sm">
                 {{ i + 1 }}
@@ -26,12 +26,12 @@
         <!-- Platform Tabs -->
         <div class="mb-12 rounded-xl bg-card border border-border/50 overflow-hidden">
           <div class="p-6 border-b border-border/50">
-            <h2 class="text-xl font-bold mb-1">Platform Configuration</h2>
-            <p class="text-sm text-muted-foreground">Choose your CI/CD platform and copy the configuration</p>
+            <h2 class="text-xl font-bold mb-1">{{ ts.t('cicd.platformConfig') }}</h2>
+            <p class="text-sm text-muted-foreground">{{ ts.t('cicd.platformConfigDesc') }}</p>
           </div>
           <div class="border-b border-border/50">
             <div class="flex">
-              @for (tab of platformTabs; track tab.id) {
+              @for (tab of platformTabs(); track tab.id) {
                 <button (click)="activeTab.set(tab.id)"
                         class="flex items-center gap-2 px-6 py-4 text-sm font-medium transition-colors border-b-2"
                         [ngClass]="activeTab() === tab.id ? 'border-primary text-primary bg-primary/5' : 'border-transparent text-muted-foreground hover:text-foreground'">
@@ -44,7 +44,7 @@
             </div>
           </div>
           <div class="p-6">
-            @for (tab of platformTabs; track tab.id) {
+            @for (tab of platformTabs(); track tab.id) {
               @if (activeTab() === tab.id) {
                 <div class="relative">
                   <pre class="p-4 rounded-lg bg-accent overflow-x-auto text-sm"><code>{{ tab.config }}</code></pre>
@@ -54,12 +54,12 @@
                       <svg class="w-4 h-4 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
                       </svg>
-                      Copied
+                      {{ ts.t('cicd.copied') }}
                     } @else {
                       <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"/>
                       </svg>
-                      Copy
+                      {{ ts.t('cicd.copy') }}
                     }
                   </button>
                 </div>
@@ -71,9 +71,9 @@
 
         <!-- Best Practices -->
         <div class="mb-12">
-          <h2 class="text-2xl font-bold mb-6">Best Practices</h2>
+          <h2 class="text-2xl font-bold mb-6">{{ ts.t('cicd.bestPractices') }}</h2>
           <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-            @for (p of bestPractices; track p.title) {
+            @for (p of bestPractices(); track p.title) {
               <div class="p-6 rounded-xl bg-card border border-border/50">
                 <div class="flex items-start gap-4">
                   <div class="w-10 h-10 rounded-lg flex items-center justify-center flex-shrink-0"
@@ -98,17 +98,17 @@
         <!-- Environment Variables -->
         <div class="rounded-xl bg-card border border-border/50 overflow-hidden">
           <div class="p-6 border-b border-border/50">
-            <h2 class="text-xl font-bold">Required Environment Variables</h2>
+            <h2 class="text-xl font-bold">{{ ts.t('cicd.envVars') }}</h2>
           </div>
           <div class="p-6 space-y-3">
-            @for (env of envVars; track env.name) {
+            @for (env of envVars(); track env.name) {
               <div class="flex items-center justify-between p-3 rounded-lg bg-accent/50">
                 <div>
                   <code class="text-sm font-medium">{{ env.name }}</code>
                   <p class="text-sm text-muted-foreground">{{ env.description }}</p>
                 </div>
                 @if (env.required) {
-                  <span class="text-xs px-2 py-1 rounded-full bg-red-500 text-white font-medium">Required</span>
+                  <span class="text-xs px-2 py-1 rounded-full bg-red-500 text-white font-medium">{{ ts.t('cicd.required') }}</span>
                 }
               </div>
             }
